@@ -1,13 +1,7 @@
 import { Request, Response, Router } from "express";
 
 import { Connection, ManagementClient, Organization } from "auth0";
-import { auth } from "express-openid-connect";
-
-const auth0 = new ManagementClient({
-  domain: process.env.AUTH0_DOMAIN || "",
-  clientId: process.env.BACKEND_CLIENT_ID || "",
-  clientSecret: process.env.BACKEND_CLIENT_SECRET || "",
-});
+import { auth0 } from "../utils/auth0";
 
 export const authRoutes = Router();
 

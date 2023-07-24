@@ -10,6 +10,7 @@ import { NotificationProvider } from "./context/NotificationContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SignUp } from "./components/SignUp";
 import { ProtectedAdminRoute } from "./components/ProtectedAdminRoute";
+import { Admin } from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -30,8 +31,9 @@ const App: React.FC = () => {
                   {/* <Route path="signup" element={<SignUp />} /> */}
                   <Route element={<ProtectedRoute />}>
                     <Route index element={<Home />} />
+                    <Route path="profile" element={<Profile />} />
                     <Route element={<ProtectedAdminRoute />}>
-                      <Route path="profile" element={<Profile />} />
+                      <Route path="admin" element={<Admin />} />
                     </Route>
                   </Route>
 

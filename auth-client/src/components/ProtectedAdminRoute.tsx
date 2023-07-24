@@ -4,11 +4,27 @@ import { Navigate, Outlet } from "react-router-dom";
 import { NotificationContext } from "../context/NotificationContext";
 
 export const ProtectedAdminRoute: React.FC = () => {
-  const { user, getIdTokenClaims } = useAuth0();
+  const { user } = useAuth0();
   const { pushNotification } = useContext(NotificationContext);
 
+  useEffect(() => {
+    if (
+      (user?.["https://client-app.com/roles"] as string[]).includes("admin") ===
+      false
+    ) {
+      pushNotification({
+        message: "You are not authorized to view this page",
+        type: "error",
+      });
+    }
+  }, [user]);
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  if (!user) {
+  if (
+    !user ||
+    (user?.["https://client-app.com/roles"] as string[]).includes("admin") ===
+      false
+  ) {
     return <Navigate to="/auth" />;
   }
 

@@ -16,10 +16,13 @@ export const AuthContext = createContext<{
 });
 
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const { isAuthenticated, getAccessTokenSilently, getIdTokenClaims } =
-    useAuth0();
+  const {
+    isLoading,
+    isAuthenticated,
+    getAccessTokenSilently,
+    getIdTokenClaims,
+  } = useAuth0();
   const { pushNotification } = useContext(NotificationContext);
-  const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
 
   const getToken = async () => {
@@ -27,17 +30,10 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setToken(token);
   };
 
-  const getIdToken = async () => {
-    const data = await getIdTokenClaims();
-    console.log("🚀 ~ file: AuthContext.tsx:31 ~ getIdToken ~ data:", data);
-  };
-
   useEffect(() => {
     if (!isAuthenticated) {
       setToken(null);
-      // navigate("/auth");
     } else {
-      void getIdToken();
       void getToken();
       pushNotification({
         message: "You are logged in",

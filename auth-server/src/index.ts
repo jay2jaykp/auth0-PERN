@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { todoRoutes } from "./routes/todo.routes";
 import { errorHandler } from "./middleware/errorHandler.middleware";
 import { authRoutes } from "./routes/auth.routes";
+import { adminRoutes } from "./routes/admin.routes";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/todos", todoRoutes);
 
 app.use("/auth", authRoutes);
 
+app.use("/admin", adminRoutes);
 // app.use(errorHandler);
 
 app.listen(4000, () => {

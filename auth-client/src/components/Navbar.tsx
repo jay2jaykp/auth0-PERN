@@ -39,10 +39,23 @@ export const Navbar: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link className="justify-between" to="/admin">
+                  Admin
+                </Link>
               </li>
+
               <li>
-                <button onClick={() => void logout()}>Logout</button>
+                <button
+                  onClick={() =>
+                    void logout({
+                      logoutParams: {
+                        returnTo: window.location.origin,
+                      },
+                    })
+                  }
+                >
+                  Logout
+                </button>
               </li>
             </ul>
           </div>
