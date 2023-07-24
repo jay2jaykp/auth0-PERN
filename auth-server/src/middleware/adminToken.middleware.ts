@@ -8,10 +8,9 @@ export const adminToken = async (
 ) => {
   try {
     const ManagementToken = await auth0Api.post("/oauth/token", {
-      client_id: "caKUZCoveJte4uPZN1ITg3OQoiBqiPCK",
-      client_secret:
-        "zNPjmkyNZtziESnLZirihCOw3cYiDPGoUiIUuvy7F7MJ3Xc6fYTs--Ag9qi4F3hf",
-      audience: "https://dev-ovtpnpypnypi1kbd.us.auth0.com/api/v2/",
+      client_id: process.env.BACKEND_CLIENT_ID,
+      client_secret: process.env.BACKEND_CLIENT_SECRET,
+      audience: process.env.MANAGEMENT_API_AUDIENCE,
       grant_type: "client_credentials",
     });
 
