@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TenantContext } from "../context/TenantContext";
 import { api } from "../utils/axios";
+import { SignUp } from "../components/SignUp";
 
 export const Auth: React.FC = () => {
   const { user, loginWithPopup } = useAuth0();
@@ -26,6 +27,7 @@ export const Auth: React.FC = () => {
                 authorizationParams: {
                   connection: selectedTenant?.name,
                   organization: selectedTenant?.id,
+                  redirect_uri: `${window.location.origin}/callback`,
                 },
               })
             }
@@ -33,9 +35,7 @@ export const Auth: React.FC = () => {
             Login
           </button>
           <p className="text-center">OR</p>
-          <Link to="/signup" className="btn btn-secondary">
-            Create account
-          </Link>
+          <SignUp />
         </div>
       </div>
     </div>

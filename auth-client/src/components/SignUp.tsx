@@ -2,10 +2,11 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { TenantContext } from "../context/TenantContext";
 import { useAuth0 } from "@auth0/auth0-react";
+import { NotificationContext } from "../context/NotificationContext";
 
 export const SignUp: React.FC = () => {
   const { selectedTenant } = useContext(TenantContext);
-  const { getAccessTokenSilently } = useAuth0();
+  const { pushNotification } = useContext(NotificationContext);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -29,7 +30,22 @@ export const SignUp: React.FC = () => {
         },
       }
     );
-    console.log(res);
+    if (res.status === 200) {
+      setEmail("");
+      setPassword("");
+      setFirstName("");
+      setLastName("");
+      setPhone("");
+
+      pushNotification({
+        message: "Successfully created account",
+        type: "success",
+      });
+      pushNotification({
+        message: "Please log in",
+        type: "success",
+      });
+    }
   };
 
   return (

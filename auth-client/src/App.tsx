@@ -8,7 +8,8 @@ import { Profile } from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SignUp } from "./pages/SignUp";
+import { SignUp } from "./components/SignUp";
+import { ProtectedAdminRoute } from "./components/ProtectedAdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -26,11 +27,14 @@ const App: React.FC = () => {
               <div className="flex-1">
                 <Routes>
                   <Route path="auth" element={<Auth />} />
-                  <Route path="signup" element={<SignUp />} />
+                  {/* <Route path="signup" element={<SignUp />} /> */}
                   <Route element={<ProtectedRoute />}>
                     <Route index element={<Home />} />
-                    <Route path="profile" element={<Profile />} />
+                    <Route element={<ProtectedAdminRoute />}>
+                      <Route path="profile" element={<Profile />} />
+                    </Route>
                   </Route>
+
                   <Route path="/callback" element={<h2>Hello Callback</h2>} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

@@ -11,21 +11,20 @@ const auth0 = new ManagementClient({
 
 export const authRoutes = Router();
 
-authRoutes.get("/tenants", async (req: Request, res: Response) => {
+authRoutes.get("/tenant/:name", async (req: Request, res: Response) => {
   try {
-    const tenants = await auth0.organizations.getAll();
-    const connections = await auth0.getConnections();
-    const tenantsWithConnections: (Organization & {
-      connections: Connection;
-    })[] = tenants.map((tenant) => {
-      const tenantConnections = connections.filter(
-        (connection) => connection.name === tenant.name
-      );
-      return {
-        ...tenant,
-        connections: tenantConnections[0],
-      };
+    const tenants = await auth0.organizations.getByName({
+      name: req.params.name,
     });
+    const connections = await auth0.getConnections();
+    const tenantsWithConnections: Organization & {
+      connection: Connection;
+    } = {
+      ...tenants,
+      connection: connections.filter(
+        (connection) => connection.name === tenants.name
+      )[0],
+    };
     res.send(tenantsWithConnections);
   } catch (error) {
     console.log(

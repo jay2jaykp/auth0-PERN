@@ -6,44 +6,22 @@ import { TenantContext } from "../context/TenantContext";
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth0();
-  const { allTenants, setSelectedTenant, selectedTenant } =
-    useContext(TenantContext);
+  const { setSelectedTenant, selectedTenant } = useContext(TenantContext);
   return (
     <div className="navbar bg-base-200">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost normal-case text-xl">
-          {STATICS.brand}
+          <div className="text-center">
+            <img
+              className="w-24 mx-auto"
+              src={selectedTenant?.branding.logo_url}
+              alt="brand-logo"
+            />
+            <p className="text-sm">Powered By {STATICS.brand}</p>
+          </div>
         </Link>
       </div>
       <div className="flex-none">
-        {!user && (
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn m-1">
-              {selectedTenant?.name}
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48"
-            >
-              {allTenants.map((tenant) => (
-                <li key={tenant.id}>
-                  <a
-                    onClick={() => {
-                      setSelectedTenant(tenant);
-                    }}
-                    className={`${
-                      tenant.id === selectedTenant?.id
-                        ? "bg-primary text-base-content"
-                        : "bg-base-100 text-base-content"
-                    } `}
-                  >
-                    {tenant.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
         {user && (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">

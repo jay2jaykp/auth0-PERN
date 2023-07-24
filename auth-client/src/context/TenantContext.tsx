@@ -19,11 +19,9 @@ type Tenant = {
 };
 
 export const TenantContext = createContext<{
-  allTenants: Tenant[];
   selectedTenant: Tenant | null;
   setSelectedTenant: (tenant: Tenant) => void;
 }>({
-  allTenants: [],
   selectedTenant: null,
   setSelectedTenant: () => {
     console.log("not defined yet");
@@ -31,17 +29,17 @@ export const TenantContext = createContext<{
 });
 
 export const TenantProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [allTenants, setAllTenants] = useState<Tenant[]>([]);
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
 
-  const getAllTenants = async () => {
-    const data = await api.get("/auth/tenants");
+  const getTenantInfo = async () => {
+    const subDomain = window.location.hostname.split(".")[0];
+    const data = await api.get(`/auth/tenant/${subDomain}`);
     console.log(data);
-    setAllTenants(data.data as Tenant[]);
+    setSelectedTenant(data.data as Tenant);
   };
 
   useEffect(() => {
-    void getAllTenants();
+    void getTenantInfo();
   }, []);
 
   useEffect(() => {
@@ -50,28 +48,26 @@ export const TenantProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [selectedTenant]);
 
-  useEffect(() => {
-    const selectedTenant = localStorage.getItem("selectedTenant");
-    if (selectedTenant && allTenants.length > 0) {
-      const selectedTenantFromLocalStorage = JSON.parse(
-        selectedTenant
-      ) as Tenant;
-      if (
-        allTenants.some(
-          (tenant) => tenant.id === selectedTenantFromLocalStorage.id
-        )
-      ) {
-        setSelectedTenant(selectedTenantFromLocalStorage);
-      } else {
-        setSelectedTenant(allTenants[0]);
-      }
-    }
-  }, [allTenants.length]);
+  //   useEffect(() => {
+  //     const selectedTenant = localStorage.getItem("selectedTenant");
+  //     if (selectedTenant && allTenants.length > 0) {
+  //       const selectedTenantFromLocalStorage = JSON.parse(
+  //         selectedTenant
+  //       ) as Tenant;
+  //       if (
+  //         allTenants.some(
+  //           (tenant) => tenant.id === selectedTenantFromLocalStorage.id
+  //         )
+  //       ) {
+  //         setSelectedTenant(selectedTenantFromLocalStorage);
+  //       } else {
+  //         setSelectedTenant(allTenants[0]);
+  //       }
+  //     }
+  //   }, [allTenants.length]);
 
   return (
-    <TenantContext.Provider
-      value={{ allTenants, selectedTenant, setSelectedTenant }}
-    >
+    <TenantContext.Provider value={{ selectedTenant, setSelectedTenant }}>
       {children}
     </TenantContext.Provider>
   );
