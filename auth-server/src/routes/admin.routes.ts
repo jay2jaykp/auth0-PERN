@@ -32,6 +32,31 @@ adminRoutes.post("/users", async (req, res) => {
       "🚀 ~ file: admin.routes.ts:35 ~ adminRoutes.get ~ error:",
       error
     );
+    res.status(500).json({
+      message: "Something went wrong",
+      error,
+    });
+  }
+});
+
+adminRoutes.post("/invitations", async (req, res) => {
+  try {
+    const { org_id } = req.body.user || (req.headers.user as any);
+
+    const invitations = await auth0Api.get(
+      `/api/v2/organizations/${org_id}/invitations`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.body.ManagementToken}`,
+        },
+      }
+    );
+    res.send(invitations.data);
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: admin.routes.ts:60 ~ adminRoutes.post ~ error:",
+      error
+    );
 
     res.status(500).json({
       message: "Something went wrong",
@@ -47,7 +72,7 @@ adminRoutes.post("/invite", async (req, res) => {
     {
       inviter: { name: req.body.user.name },
       invitee: { email: req.body.invitee_email },
-      client_id: "qJt1s0XMDQLSMhaOttQ5Cz7JPer1WBPW", // multi-tenant application
+      client_id: req.body.client_id, // multi-tenant application
       connection_id: req.body.connection_id,
       // ttl_sec: "",
       // roles: ["ROLE_ID", "ROLE_ID", "ROLE_ID"],
@@ -59,9 +84,6 @@ adminRoutes.post("/invite", async (req, res) => {
       },
     }
   );
-  console.log(
-    "🚀 ~ file: admin.routes.ts:63 ~ adminRoutes.post ~ invite:",
-    invite
-  );
-  res.send("done");
+
+  res.send(invite.data);
 });

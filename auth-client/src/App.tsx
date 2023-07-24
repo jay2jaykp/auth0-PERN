@@ -36,7 +36,6 @@ const App: React.FC = () => {
                       <Route path="admin" element={<Admin />} />
                     </Route>
                   </Route>
-
                   <Route path="/callback" element={<h2>Hello Callback</h2>} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

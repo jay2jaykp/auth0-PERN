@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TenantContext } from "../context/TenantContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { NotificationContext } from "../context/NotificationContext";
+import { useParams, useSearchParams } from "react-router-dom";
 
 export const SignUp: React.FC = () => {
   const { selectedTenant } = useContext(TenantContext);
@@ -12,6 +14,23 @@ export const SignUp: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+
+  const [searchParam] = useSearchParams();
+
+  const invitationFlow = () => {
+    const invitation = searchParam.get("invitation");
+    const organization = searchParam.get("organization");
+
+    if (invitation && organization) {
+      window.location.replace(
+        `${
+          import.meta.env.VITE_AUTH0_DOMAIN
+        }/authorize?invitation=${invitation}&client_id=${
+          import.meta.env.VITE_AUTH0_CLIENT_ID
+        }&response_type=code`
+      );
+    }
+  };
 
   const handleSignUp = async () => {
     const res = await axios.post(
@@ -47,6 +66,10 @@ export const SignUp: React.FC = () => {
       });
     }
   };
+
+  useEffect(() => {
+    void invitationFlow();
+  }, []);
 
   return (
     <div className=" flex justify-center items-center">
